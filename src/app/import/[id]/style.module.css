@@ -1,0 +1,7 @@
+.image-container {
+  scrollbar-width: none !important;
+}
+
+.image-container::-webkit-scrollbar {
+  display: none !important; /* Hides the scrollbar */
+}
