@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import {
@@ -53,32 +54,32 @@ const data = {
   navMain: [
     {
       title: "Importar",
-      url: "/import",
-      icon: Import,
-      isActive: true,
-      items: [
-        {
-          title: "Pending",
-          url: "/import",
-        },
-        {
-          title: "Done",
-          url: "import/?imported=true",
-        },
-        {
-          title: "Exported",
-          url: "import/?exported=true",
-        },
-      ],
-    },
-    {
-      title: "Minhas Importações",
       url: "#",
       icon: Bot,
       items: [
         {
           title: "all",
-          url: "/imported",
+          url: "/import",
+        },
+      ],
+    },
+    {
+      title: "Importados",
+      url: "/import",
+      icon: Import,
+      isActive: true,
+      items: [
+        {
+          title: "Todos",
+          url: "/import",
+        },
+        {
+          title: "Sucesso",
+          url: "import/?imported=true",
+        },
+        {
+          title: "Exportados",
+          url: "import/?exported=true",
         },
       ],
     },
@@ -158,10 +159,26 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user } = props;
+
+  const logedUser = {
+    name: user?.username,
+    email: user?.email,
+    avatar: "/avatars/shadcn.jpg",
+  }
+
+    const userShops = user?.shops.map((shop: any) => {
+      return {
+        name: shop.name,
+        logo: GalleryVerticalEnd,
+        domain: "Enterprise",
+      }
+    });
+  
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher shops={userShops} />
       </SidebarHeader>
       <SidebarContent>
         <NavDashboard items={data.dashboard} />
@@ -169,7 +186,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavConfigurations projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={logedUser} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

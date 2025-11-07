@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { ProductsProvider } from "@/context/products-provider";
-import { UserProvider } from "@/context/user-context";
+import { UserProvider } from "@/context/user-provider";
+import { ExtensionProvider } from "@/context/extension-provider";
 
 // export type Params = {};
 
@@ -19,16 +20,18 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`antialiased`}>
-        <UserProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <ProductsProvider>{children}</ProductsProvider>
-          </ThemeProvider>
-        </UserProvider>
+        <ExtensionProvider>
+          <UserProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <ProductsProvider>{children}</ProductsProvider>
+            </ThemeProvider>
+          </UserProvider>
+        </ExtensionProvider>
       </body>
     </html>
   );

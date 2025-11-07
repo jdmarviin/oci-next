@@ -3,6 +3,7 @@
 "use server";
 
 import { TOKEN_POST } from "@/functions/api";
+import { User } from "lucide-react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -18,15 +19,10 @@ export default async function login(
 ): Promise<ActionState> {
   const username = formData.get("username") as string | null;
   const password = formData.get("password") as string | null;
-
-  console.log(username);
-  console.log(password);
   
   try {
     if (!username || !password) throw new Error("Invalid credentials");
     const { url } = TOKEN_POST();
-
-    console.log(url);
     
     const response = await fetch(url, {
       method: "POST",
@@ -39,7 +35,6 @@ export default async function login(
       }),
     });
     
-    console.log(url);
     if (!response.ok) throw new Error("Invalid credentials");
 
     const data = await response.json();
@@ -51,8 +46,14 @@ export default async function login(
       maxAge: 60 * 60 * 24,
     });
 
-    localStorage.setItem("user", JSON.stringify(data.id));
+    (await cookies()).set("user", data.id, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24,
+    });
 
+    sendTokenToExtension(data);
     // redirect('/dashboard')
     return { ok: true, data, error: "" };
   } catch (error: unknown) {
@@ -60,4 +61,15 @@ export default async function login(
       error instanceof Error ? error.message : "An unknown error occurred.";
     return { ok: false, data: null, error: errorMessage };
   }
+}
+
+function sendTokenToExtension(data: any): void {
+  window.postMessage({
+    type: 'APP_TO_EXTENSION',
+    action: 'SAVE_TOKEN',
+    payload: {
+      token: data.access_token,
+      user: data,
+    }
+  }, '*');
 }

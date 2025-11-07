@@ -2,13 +2,45 @@
 
 import FeatureTable from "@/components/table/table";
 import { useProducts } from "@/context/products-provider";
-import { useEffect } from "react";
-import { Spinner } from '@/components/ui/shadcn-io/spinner';
+import React from "react";
+import { Spinner } from "@/components/ui/shadcn-io/spinner";
+import createProduct, { ActionState } from "@/actions/import_product";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const breadcrumbs: string[] = ["Import"];
+const initialState: ActionState = {
+  ok: false, // Initial state 'ok' should be false
+  error: "",
+  data: null,
+};
+
+function FormButton({ isPending }: { isPending: boolean }) {
+  return (
+    <>
+      {isPending ? (
+        <Button disabled={isPending} className="cursor-pointer">
+          Importando...
+        </Button>
+      ) : (
+        <Button
+          type="submit"
+          onClick={() => console.log("Clicouu" + isPending)}
+          className="cursor-pointer"
+        >
+          Importar
+        </Button>
+      )}
+    </>
+  );
+}
 
 export default function ImportPage() {
   const { products, isLoading, error, refetch } = useProducts();
+  const [state, action, isPending] = React.useActionState<
+    ActionState,
+    FormData
+  >(createProduct, initialState);
 
   function escapeHTML(htmlString: string): string {
     const indentSize = 4; // Tamanho da indentação em espaços
@@ -50,12 +82,22 @@ export default function ImportPage() {
       .join("\n");
   }
 
-  useEffect(() => {
-    console.log(products);  
-  })
+  React.useEffect(() => {
+    console.log(products);
+  });
 
-  if (isLoading) return <div className="w-full h-[80vh] flex justify-center items-center"><Spinner variant="bars" /></div>;
-  if (error) return <div>Erro: {error} <button onClick={refetch}>Tentar novamente</button></div>;
+  if (isLoading)
+    return (
+      <div className="w-full h-[80vh] flex justify-center items-center">
+        <Spinner variant="bars" />
+      </div>
+    );
+  if (error)
+    return (
+      <div>
+        Erro: {error} <button onClick={refetch}>Tentar novamente</button>
+      </div>
+    );
 
   return (
     <>
@@ -69,8 +111,11 @@ export default function ImportPage() {
             <div dangerouslySetInnerHTML={{ __html: item.scrapper_data.description_html }}></div>
           </div>
         ))} */}
-
-        { products.length && <FeatureTable products={products} /> }
+        <form action={action} className="flex gap-4 mb-4">
+          <Input type="text" id="url" name="url" disabled={isPending} required placeholder="Url do produto" />
+          <FormButton isPending={isPending} />
+        </form>
+        {products.length && <FeatureTable products={products} />}
       </main>
     </>
   );

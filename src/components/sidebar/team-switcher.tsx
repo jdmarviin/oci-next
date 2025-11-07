@@ -20,16 +20,16 @@ import {
 } from "@/components/ui/sidebar"
 
 export function TeamSwitcher({
-  teams,
+  shops,
 }: {
-  teams: {
+  shops: {
     name: string
     logo: React.ElementType
-    plan: string
+    domain: string
   }[]
 }) {
   const { isMobile } = useSidebar()
-  const [activeTeam, setActiveTeam] = React.useState(teams[0])
+  const [activeTeam, setActiveTeam] = React.useState(shops[0])
 
   if (!activeTeam) {
     return null
@@ -49,7 +49,7 @@ export function TeamSwitcher({
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{activeTeam.name}</span>
-                <span className="truncate text-xs">{activeTeam.plan}</span>
+                <span className="truncate text-xs">{activeTeam.domain || 'Oii'}</span>
               </div>
               <ChevronsUpDown className="ml-auto" />
             </SidebarMenuButton>
@@ -61,9 +61,9 @@ export function TeamSwitcher({
             sideOffset={4}
           >
             <DropdownMenuLabel className="text-muted-foreground text-xs">
-              Teams
+              Shops
             </DropdownMenuLabel>
-            {teams.map((team, index) => (
+            {shops.map((team, index) => (
               <DropdownMenuItem
                 key={team.name}
                 onClick={() => setActiveTeam(team)}

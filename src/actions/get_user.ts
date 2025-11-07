@@ -4,6 +4,7 @@
 'use server'
 
 import { cookies } from 'next/headers';
+import { USER_GET } from '@/functions/api';
 
 export type User = {
     id: number;
@@ -14,10 +15,18 @@ export type User = {
     integrations: any;
 }
 
-export default async function getUserData(id) {
+interface IResponse {
+    status: number;
+    response: User | undefined;
+};
+
+export default async function getUserData() {
     const _cookies = await cookies();
     const token = _cookies.get("token")
+    const id = _cookies.get("user")?.value;
 
+    console.log(id);
+    
     const { url } = USER_GET(id);
 
     const response = await fetch(url, {
@@ -27,9 +36,9 @@ export default async function getUserData(id) {
             "Authorization": `Bearer ${token?.value}`,
         },
     });
+
     if (!response.ok) throw new Error('Erro ao buscar os produtos.');
 
-    const data = (await response.json()) as User;
-    // revalidatePath('/produtos');
+    const data = (await response.json()) as IResponse;
     return { ok: true, data };
 }

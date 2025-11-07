@@ -1,22 +1,34 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 'use server'
 
-import { PRODUCT_GET } from "@/functions/api";
+import { PRODUCT_CREATE } from '@/functions/api';
 import { cookies } from 'next/headers';
 import { redirect } from "next/navigation";
 import { Product } from "./products";
 
-export default async function getProduct(id: string) {
+export type ActionState = {
+  ok: boolean;
+  data: any | null;
+  error: string;
+};
+
+export default async function createProduct(
+    state: ActionState,
+    formData: FormData,    
+): Promise<ActionState> {
+    const productUrl = formData.get('url') as string;
+
     const _cookies = await cookies();
     const token = _cookies.get("token")
 
-    const { url } = PRODUCT_GET(id);
+    const { url } = PRODUCT_CREATE();
+    console.log(productUrl);
     
     try {
-        const response = await fetch(url, {
-            method: 'GET',
+        if (!productUrl) throw new Error("Invalid credentials");
+        const response = await fetch(`${url}?url=${productUrl}`, {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 "Authorization": `Bearer ${token?.value}`,
@@ -25,7 +37,7 @@ export default async function getProduct(id: string) {
         if (!response.ok) throw new Error('Erro ao buscar produto.');
 
         const data = (await response.json()) as Product;
-        return { ok: true, data };
+        return { ok: true, data, error: '' };
     } catch (error: unknown) {
         redirect("/login");
         // const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';

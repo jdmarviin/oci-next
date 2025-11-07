@@ -3,16 +3,15 @@
 
 'use server'
 
-import { PRODUCT_GET } from "@/functions/api";
+import { PRODUCT_EDIT_AI } from "@/functions/api";
 import { cookies } from 'next/headers';
-import { redirect } from "next/navigation";
 import { Product } from "./products";
 
-export default async function getProduct(id: string) {
+export default async function editProductWithAI(id: string) {
     const _cookies = await cookies();
     const token = _cookies.get("token")
 
-    const { url } = PRODUCT_GET(id);
+    const { url } = PRODUCT_EDIT_AI(id);
     
     try {
         const response = await fetch(url, {
@@ -27,8 +26,7 @@ export default async function getProduct(id: string) {
         const data = (await response.json()) as Product;
         return { ok: true, data };
     } catch (error: unknown) {
-        redirect("/login");
-        // const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
-        // return { ok: false, data: null, error: errorMessage };
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+        return { ok: false, data: null, error: errorMessage };
     }
 }

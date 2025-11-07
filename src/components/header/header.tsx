@@ -1,13 +1,11 @@
 "use client";
 
-import styles from "./header.module.css";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
+  BreadcrumbSeparator
 } from "@/components/ui/breadcrumb";
 import {
   DropdownMenu,
@@ -19,12 +17,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Bell, ChevronDownIcon, Moon, Sun, User } from "lucide-react";
-import React from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { ChevronDownIcon } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { ModeToggle } from "../darkmode/darkmode";
 import { Button } from "../ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { useParams, usePathname, useRouter } from "next/navigation";
 
 export default function Header() { 
   const params = usePathname();

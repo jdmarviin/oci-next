@@ -24,6 +24,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { User } from "@/actions/get_user"
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -157,9 +158,11 @@ function Sidebar({
   collapsible = "offcanvas",
   className,
   children,
+  user,
   ...props
 }: React.ComponentProps<"div"> & {
   side?: "left" | "right"
+  user: User | undefined
   variant?: "sidebar" | "floating" | "inset"
   collapsible?: "offcanvas" | "icon" | "none"
 }) {

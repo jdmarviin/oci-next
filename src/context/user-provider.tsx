@@ -21,17 +21,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
     try {
       setIsLoading(true);
       setError(null);
-      const id = JSON.parse(localStorage.getItem('user') as string) as string
+      const response = await getUserData();
 
-      if (id) {
-        const response = await getUserData(id);
-
-        if (response.ok) {
-          const user = response.data
-          setUser(user);
-        } 
+      if (response.ok) {
+        const res = response.data
+        setUser(res.response);
       } else {
-        setUser(undefined);
+        setUser(undefined)
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro desconhecido');

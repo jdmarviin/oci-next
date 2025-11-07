@@ -22,7 +22,7 @@ import React from "react";
 import styles from "./login-form.module.css";
 
 const initialState: ActionState = {
-  ok: false, // Initial state 'ok' should be false
+  ok: false,
   error: "",
   data: null,
 };
@@ -31,14 +31,14 @@ function FormButton({ isPending }: { isPending: boolean }) {
   return (
     <>
       {isPending ? (
-        <Button disabled={isPending} className="w-full">
+        <Button disabled={isPending} className="w-full cursor-pointer">
           Enviando...
         </Button>
       ) : (
         <Button
           type="submit"
           onClick={() => console.log("Clicouu" + isPending)}
-          className="w-full"
+          className="w-full cursor-pointer"
         >
           Entrar
         </Button>
@@ -105,7 +105,7 @@ export default function LoginForm() {
         </CardContent>
         <CardFooter className="flex-col gap-2">
           <FormButton isPending={isPending} />
-          <Button variant="outline" className="w-full">
+          <Button variant="outline" className="w-full" disabled>
             Login with Google
           </Button>
         </CardFooter>

@@ -4,8 +4,8 @@
 "use server";
 
 import { PRODUCS_GET } from "@/functions/api";
-import { redirect } from "next/dist/server/api-utils";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export type Product = {
   id: number;
@@ -15,6 +15,7 @@ export type Product = {
   scrapper_data: string;
   shopify_data: any;
   ai_data: any;
+  user_data: any;
   ai_provider: string;
   import_status: string;
 };
@@ -39,6 +40,7 @@ export default async function getProductData() {
     // revalidatePath('/produtos');
     return { ok: true, data };
   } catch (error: unknown) {
-    throw new Error("Erro ao buscar os produtos.");
+    redirect("/login");
+    // throw new Error("Erro ao buscar os produtos.");
   }
 }
