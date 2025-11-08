@@ -54,7 +54,7 @@ export default function LoginForm() {
   >(login, initialState);
 
   React.useEffect(() => {
-    if (state.ok) window.location.href = "/dashboard";
+    if (state.ok) window.location.href = "/import";
   }, [state.ok]);
 
   return (

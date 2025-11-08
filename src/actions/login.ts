@@ -54,7 +54,7 @@ export default async function login(
     });
 
     // Redirecionar após salvar os cookies
-    redirect('/dashboard');
+    redirect('/import');
   } catch (error: unknown) {
     if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
       throw error;

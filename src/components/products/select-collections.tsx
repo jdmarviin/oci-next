@@ -25,8 +25,8 @@ export default function SelectCollections() {
         </MultiSelectTrigger>
         <MultiSelectContent>
           <MultiSelectGroup>
-            {collections["custom_collections"].length &&
-              collections["custom_collections"].map((collection: any) => (
+            {collections?.custom_collections.length &&
+              collections?.custom_collections.map((collection: any) => (
                 <MultiSelectItem key={collection.id} value={collection.id}>
                   {collection.title}
                 </MultiSelectItem>
