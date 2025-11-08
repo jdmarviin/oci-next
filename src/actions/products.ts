@@ -8,7 +8,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export type Product = {
-  id: number;
+  id: string;
   product_id: string;
   product_url: string;
   scrapper_data: any;

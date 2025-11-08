@@ -32,7 +32,7 @@ function FormButton({ isPending }: { isPending: boolean }) {
     <>
       {isPending ? (
         <Button disabled={isPending} className="w-full cursor-pointer">
-          Enviando...
+          Entrando...
         </Button>
       ) : (
         <Button

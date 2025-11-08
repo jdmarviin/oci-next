@@ -3,7 +3,6 @@
 "use server";
 
 import { TOKEN_POST } from "@/functions/api";
-import { User } from "lucide-react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -38,38 +37,31 @@ export default async function login(
     if (!response.ok) throw new Error("Invalid credentials");
 
     const data = await response.json();
-    console.log(data);
+    
+    // Salvar cookies
     (await cookies()).set("token", data.access_token, {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: "lax",
-      maxAge: 60 * 60 * 24,
+      maxAge: 60 * 60 * 24, // 1 dia
     });
 
     (await cookies()).set("user", data.id, {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: "lax",
       maxAge: 60 * 60 * 24,
     });
 
-    sendTokenToExtension(data);
-    // redirect('/dashboard')
-    return { ok: true, data, error: "" };
+    // Redirecionar após salvar os cookies
+    redirect('/dashboard');
   } catch (error: unknown) {
+    if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
+      throw error;
+    }
+    
     const errorMessage =
       error instanceof Error ? error.message : "An unknown error occurred.";
     return { ok: false, data: null, error: errorMessage };
   }
-}
-
-function sendTokenToExtension(data: any): void {
-  window.postMessage({
-    type: 'APP_TO_EXTENSION',
-    action: 'SAVE_TOKEN',
-    payload: {
-      token: data.access_token,
-      user: data,
-    }
-  }, '*');
 }

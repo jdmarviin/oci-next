@@ -62,7 +62,7 @@ export default function Header() {
 
           <div className="actions-wrapper flex items-center gap-4">
             <ModeToggle />
-            <DropdownMenu>
+            {/* <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
@@ -107,7 +107,7 @@ export default function Header() {
                   Log out
                 </DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
 
             {/* <div className="hover:bg-gray-400 rounded-[4px] p-1 cursor-pointer">
               <Bell />

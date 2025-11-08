@@ -3,30 +3,37 @@
 
 'use server'
 
-import { PRODUCT_EDIT_AI } from "@/functions/api";
 import { cookies } from 'next/headers';
-import { Product } from "./products";
+import { revalidatePath } from 'next/cache';
+import { PRODUCT_EDIT_AI } from '@/functions/api';
 
-export default async function editProductWithAI(id: string) {
-    const _cookies = await cookies();
-    const token = _cookies.get("token")
-
-    const { url } = PRODUCT_EDIT_AI(id);
-    
-    try {
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                "Authorization": `Bearer ${token?.value}`,
-            },
-        });
-        if (!response.ok) throw new Error('Erro ao buscar produto.');
-
-        const data = (await response.json()) as Product;
-        return { ok: true, data };
-    } catch (error: unknown) {
-        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
-        return { ok: false, data: null, error: errorMessage };
-    }
+export async function editProductWithAI(productId: string) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+  
+  if (!token) {
+    throw new Error('Não autenticado');
+  }
+  
+  const { url } = PRODUCT_EDIT_AI(productId);
+  
+  const response = await fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+  
+  if (!response.ok) {
+    throw new Error('Erro ao editar produto');
+  }
+  
+  const data = await response.json();
+  
+  // Revalidar páginas que usam esse produto
+  revalidatePath(`/import/${productId}`);
+  revalidatePath('/import');
+  
+  return data;
 }

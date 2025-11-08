@@ -25,10 +25,10 @@ export default async function getProduct(id: string) {
         if (!response.ok) throw new Error('Erro ao buscar produto.');
 
         const data = (await response.json()) as Product;
-        return { ok: true, data };
+        return { ok: true, data, error: '' };
     } catch (error: unknown) {
-        redirect("/login");
-        // const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
-        // return { ok: false, data: null, error: errorMessage };
+        // redirect("/login");
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+        return { ok: false, data: null, error: errorMessage };
     }
 }

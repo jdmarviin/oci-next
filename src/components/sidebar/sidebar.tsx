@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client"
+"use client";
 
 import {
   AudioWaveform,
@@ -10,9 +10,9 @@ import {
   Import,
   LayoutDashboard,
   Map,
-  PieChart
-} from "lucide-react"
-import * as React from "react"
+  PieChart,
+} from "lucide-react";
+import * as React from "react";
 
 import {
   Sidebar,
@@ -20,12 +20,12 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from "@/components/ui/sidebar"
-import { NavConfigurations } from "./nav-config"
-import { NavDashboard } from "./nav-dashboard"
-import { NavMain } from "./nav-main"
-import { NavUser } from "./nav-user"
-import { TeamSwitcher } from "./team-switcher"
+} from "@/components/ui/sidebar";
+import { NavConfigurations } from "./nav-config";
+import { NavDashboard } from "./nav-dashboard";
+import { NavMain } from "./nav-main";
+import { NavUser } from "./nav-user";
+import { TeamSwitcher } from "./team-switcher";
 
 // This is sample data.
 const data = {
@@ -156,7 +156,7 @@ const data = {
       items: [],
     },
   ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = props;
@@ -165,15 +165,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     name: user?.username,
     email: user?.email,
     avatar: "/avatars/shadcn.jpg",
-  }
+  };
 
-    const userShops = user?.shops.map((shop: any) => {
-      return {
-        name: shop.name,
-        logo: GalleryVerticalEnd,
-        domain: "Enterprise",
-      }
-    });
+  const userShops = user?.shops.map((shop: any) => {
+    return {
+      name: shop.name,
+      logo: GalleryVerticalEnd,
+      domain: "Enterprise",
+    };
+  });
+
+  console.log('SHOPS: '+ userShops);
   
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -190,5 +192,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }
