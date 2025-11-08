@@ -8,43 +8,63 @@ export type RichTextEditorHandle = {
     getContent: () => string;
 }
 
-const RichTextEditor = React.forwardRef<RichTextEditorHandle>((_, ref) => {
-  const editorRef = React.useRef<HTMLDivElement>(null);
-  const quillRef = React.useRef<Quill | null>(null);
+interface RichTextEditorProps {
+  initialContent?: string;
+}
 
-  React.useEffect(() => {
-    if (editorRef.current) {
-      quillRef.current = new Quill(editorRef.current, {
-        theme: 'snow',
-        modules: {
-          toolbar: [
-            [{ header: [1, 2, 3, false] }],
-            ['bold', 'italic', 'underline', 'strike'],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            ['link', 'image'],
-            ['clean'],
-          ],
-        },
-        placeholder: 'Write something...',
-      });
-    }
+const RichTextEditor = React.forwardRef<RichTextEditorHandle, RichTextEditorProps>(
+  ({ initialContent = '' }, ref) => {
+    const editorRef = React.useRef<HTMLDivElement>(null);
+    const quillRef = React.useRef<Quill | null>(null);
 
-    return () => {
-      quillRef.current = null;
-    };
-  }, []);
-  
-  React.useImperativeHandle(ref, () => ({
-    getContent: () => {
-      if (quillRef.current) {
-        return quillRef.current.root.innerHTML;
+    React.useEffect(() => {
+      if (editorRef.current && !quillRef.current) {
+        quillRef.current = new Quill(editorRef.current, {
+          theme: 'snow',
+          modules: {
+            toolbar: [
+              [{ header: [1, 2, 3, false] }],
+              ['bold', 'italic', 'underline', 'strike'],
+              [{ list: 'ordered' }, { list: 'bullet' }],
+              ['link', 'image'],
+              ['clean'],
+            ],
+          },
+          placeholder: 'Write something...',
+        });
+
+        // Define o conteúdo inicial
+        if (initialContent) {
+          quillRef.current.root.innerHTML = initialContent;
+        }
       }
-      return '';
-    },
-  }));
 
-  return <div ref={editorRef} style={{ height: '500px' }} />;
-});
+      return () => {
+        if (quillRef.current) {
+          quillRef.current = null;
+        }
+      };
+    }, []);
+
+    // Atualiza o conteúdo quando initialContent mudar
+    React.useEffect(() => {
+      if (quillRef.current && initialContent) {
+        quillRef.current.root.innerHTML = initialContent;
+      }
+    }, [initialContent]);
+    
+    React.useImperativeHandle(ref, () => ({
+      getContent: () => {
+        if (quillRef.current) {
+          return quillRef.current.root.innerHTML;
+        }
+        return '';
+      },
+    }));
+
+    return <div ref={editorRef} style={{ height: '500px' }} />;
+  }
+);
 
 RichTextEditor.displayName = 'RichTextEditor';
 export default RichTextEditor;

@@ -56,6 +56,7 @@ export default function ProductDetail({ id, data }: { id: string; data: any }) {
 
   const editorRef = React.useRef<RichTextEditorHandle>(null);
   const [editorContent, setEditorContent] = React.useState("");
+  const [initialContent, setInitialContent] = React.useState("");
 
   const handleGetContent = () => {
     if (editorRef.current) {
@@ -65,10 +66,11 @@ export default function ProductDetail({ id, data }: { id: string; data: any }) {
   };
 
   React.useEffect(() => {
-    if (data?.scrapper_data["description"]) {
-      setEditorContent(data?.scrapper_data["description"]);
+    if (data?.scrapper_data["description_html"]) {
+      setInitialContent(data?.scrapper_data["description_html"]);
+      setEditorContent(data?.scrapper_data["description_html"]);
     }
-  }, [data])
+  }, [data]);
 
   return (
     <>
@@ -139,21 +141,11 @@ export default function ProductDetail({ id, data }: { id: string; data: any }) {
                   )}
                 </div> */}
 
-                <div className="border rounded p-4 max-h-[700px] overflow-auto">
-                  <RichTextEditor ref={editorRef} />
-                  <button
-                    onClick={handleGetContent}
-                    className="mt-4 px-4 py-2 bg-blue-500 text-white rounded flex "
-                  >
-                    Show Content
-                  </button>
-                  <div className="mt-4">
-                    <h2 className="font-bold text-lg">Editor Content:</h2>
-                    <div
-                      className="border p-4 rounded bg-gray-50"
-                      dangerouslySetInnerHTML={{ __html: editorContent }}
-                    />
-                  </div>
+                <div className="">
+                  <RichTextEditor
+                    ref={editorRef}
+                    initialContent={initialContent}
+                  />
                 </div>
 
                 <div className="border rounded p-4">
