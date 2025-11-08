@@ -32,14 +32,13 @@ function FormButton({ isPending }: { isPending: boolean }) {
   return (
     <>
       {isPending ? (
-        <Button disabled={isPending} className="w-full cursor-pointer">
+        <Button disabled={isPending} className="cursor-pointer">
           Salvando...
         </Button>
       ) : (
         <Button
           type="submit"
-          onClick={() => console.log("Clicouu" + isPending)}
-          className="w-full cursor-pointer"
+          className="cursor-pointer"
         >
           Salvar alterações
         </Button>
@@ -57,18 +56,20 @@ export default function ProductDetail({ id, data }: { id: string; data: any }) {
   const editorRef = React.useRef<RichTextEditorHandle>(null);
   const [editorContent, setEditorContent] = React.useState("");
   const [initialContent, setInitialContent] = React.useState("");
+  const [showPreview, setShowPreview] = React.useState(false);
 
   const handleGetContent = () => {
     if (editorRef.current) {
-      const content = editorRef.current.getContent(); // Get the editor content
-      setEditorContent(content); // Update the state with the content
+      const content = editorRef.current.getContent();
+      setEditorContent(content);
+      setShowPreview(true);
     }
   };
 
   React.useEffect(() => {
-    if (data?.scrapper_data["description_html"]) {
-      setInitialContent(data?.scrapper_data["description_html"]);
-      setEditorContent(data?.scrapper_data["description_html"]);
+    if (data?.scrapper_data["description"]) {
+      setInitialContent(data?.scrapper_data["description"]);
+      setEditorContent(data?.scrapper_data["description"]);
     }
   }, [data]);
 
@@ -124,29 +125,66 @@ export default function ProductDetail({ id, data }: { id: string; data: any }) {
                   />
                 </h1>
 
-                {/* <div className="border rounded p-4 max-h-[700px] overflow-auto">
+                <div className="border rounded h-[500px] max-h-[500px] overflow-auto">
                   {data?.ai_data ? (
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: data?.ai_data["description"],
-                      }}
-                    ></div>
+                    <textarea
+                      name="description"
+                      defaultValue={data?.ai_data["description"]}
+                      className="!text-primary w-full h-full p-4"
+                      // dangerouslySetInnerHTML={{
+                      //   __html: data?.ai_data["description"],
+                      // }}
+                    ></textarea>
                   ) : (
-                    <div
-                      className="!text-primary"
-                      dangerouslySetInnerHTML={{
-                        __html: data?.scrapper_data["description_html"],
-                      }}
-                    ></div>
+                    <textarea
+                      name="description"
+                      defaultValue={data?.scrapper_data["description"]}
+                      className="!text-primary w-full h-full p-4"
+                      // dangerouslySetInnerHTML={{
+                      //   __html: data?.scrapper_data["description_html"],
+                      // }}
+                    ></textarea>
                   )}
-                </div> */}
+                </div>
 
-                <div className="">
+                {/* <div className="border rounded p-4">
                   <RichTextEditor
                     ref={editorRef}
                     initialContent={initialContent}
                   />
-                </div>
+
+                  <div className="mt-4 flex gap-2">
+                    <button
+                      type="button"
+                      onClick={handleGetContent}
+                      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                    >
+                      👁️ Visualizar Preview
+                    </button>
+
+                    {showPreview && (
+                      <button
+                        type="button"
+                        onClick={() => setShowPreview(false)}
+                        className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition"
+                      >
+                        ✖️ Fechar Preview
+                      </button>
+                    )}
+                  </div>
+
+                  {showPreview && (
+                    <div className="mt-4">
+                      <h2 className="font-bold text-lg mb-2">
+                        Preview do Conteúdo:
+                      </h2>
+                      <div
+                        className="border p-4 rounded bg-gray-50 max-h-[400px] overflow-auto"
+                        dangerouslySetInnerHTML={{ __html: editorContent }}
+                      />
+                    </div>
+                  )}
+                </div> */}
 
                 <div className="border rounded p-4">
                   <h1>Opções</h1>
@@ -260,6 +298,8 @@ export default function ProductDetail({ id, data }: { id: string; data: any }) {
                 </div>
               </div>
             </section>
+
+            <FormButton isPending={isPending} />
           </form>
         </main>
       }

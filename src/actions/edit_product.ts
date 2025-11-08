@@ -11,6 +11,10 @@ export default async function editProduct(
     const description = formData.get("description") as string | null;
     const price = formData.get("price") as string | null;
     const productId = formData.get("productId") as string | null;
+
+    // const scrapperData = await getScrapperData(productId);
+    // const data = structuredClone();
+    console.log(formData);
     
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;

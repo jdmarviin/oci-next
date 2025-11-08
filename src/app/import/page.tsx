@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import FeatureTable from "@/components/table/table";
 import { useProducts } from "@/context/products-provider";
@@ -36,7 +36,7 @@ function FormButton({ isPending }: { isPending: boolean }) {
 }
 
 export default function ImportPage() {
-  const { products, isLoading, error, refetch } = useProducts();
+  const { products, isLoading, refetch } = useProducts();
   const [state, action, isPending] = React.useActionState<
     ActionState,
     FormData
@@ -92,12 +92,12 @@ export default function ImportPage() {
         <Spinner variant="bars" />
       </div>
     );
-  if (error)
-    return (
-      <div>
-        Erro: {error} <button onClick={refetch}>Tentar novamente</button>
-      </div>
-    );
+  // if (error)
+  //   return (
+  //     <div>
+  //       Erro: {error} <button onClick={refetch}>Tentar novamente</button>
+  //     </div>
+  //   );
 
   return (
     <>
@@ -112,7 +112,14 @@ export default function ImportPage() {
           </div>
         ))} */}
         <form action={action} className="flex gap-4 mb-4">
-          <Input type="text" id="url" name="url" disabled={isPending} required placeholder="Url do produto" />
+          <Input
+            type="text"
+            id="url"
+            name="url"
+            disabled={isPending}
+            required
+            placeholder="Url do produto"
+          />
           <FormButton isPending={isPending} />
         </form>
         {products.length && <FeatureTable products={products} />}

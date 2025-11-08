@@ -8,7 +8,7 @@ const breadcrumbs: string[] = [
 ]
 
 export default function Page() {
-  const { products, isLoading, error, refetch } = useProducts();
+  const { products, isLoading, refetch } = useProducts();
 
   return (
     <>
