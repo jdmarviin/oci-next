@@ -9,6 +9,7 @@ import {
 } from "react";
 import getProductData, { Product } from "@/actions/products";
 import { log } from "console";
+import { API_URL } from "@/functions/api";
 
 interface ProductsContextType {
   products: Product[];
@@ -45,7 +46,7 @@ export function ProductsProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     fetchProducts();
 
-    const eventSource = new EventSource("http://127.0.0.1:8000/sse/stream");
+    const eventSource = new EventSource(`${API_URL}/sse/stream`);
     
     eventSource.onmessage = (event) => {
       try {
