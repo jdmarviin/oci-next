@@ -36,10 +36,7 @@ function FormButton({ isPending }: { isPending: boolean }) {
           Salvando...
         </Button>
       ) : (
-        <Button
-          type="submit"
-          className="cursor-pointer"
-        >
+        <Button type="submit" className="cursor-pointer">
           Salvar alterações
         </Button>
       )}
@@ -57,6 +54,10 @@ export default function ProductDetail({ id, data }: { id: string; data: any }) {
   const [editorContent, setEditorContent] = React.useState("");
   const [initialContent, setInitialContent] = React.useState("");
   const [showPreview, setShowPreview] = React.useState(false);
+  const [selectedCollections, setSelectedCollections] = React.useState<
+    string[]
+  >([]);
+  const [selectedTags, setSelectedTags] = React.useState<string[]>([]);
 
   const handleGetContent = () => {
     if (editorRef.current) {
@@ -79,7 +80,9 @@ export default function ProductDetail({ id, data }: { id: string; data: any }) {
         <main className="content mb-8">
           <section className="border p-4 rounded flex gap-2 justify-between items-center mb-8">
             <div className="flex gap-2 items-center">
-              <h1 className="font-semibold">{data?.scrapper_data["title"]}</h1>
+              <h1 className="font-semibold">
+                {data?.ai_data?.["title"] || data?.scrapper_data["title"]}
+              </h1>
               <span className="p-1 bg-accent border rounded">
                 {data?.product_id}
               </span>
@@ -89,7 +92,10 @@ export default function ProductDetail({ id, data }: { id: string; data: any }) {
             </div>
 
             <div className="flex gap-2">
-              <ProductActions productId={id} />
+              <ProductActions
+                productId={id}
+                import_status={data?.import_status}
+              />
             </div>
           </section>
 
@@ -120,30 +126,36 @@ export default function ProductDetail({ id, data }: { id: string; data: any }) {
                   <input
                     type="text"
                     name="title"
-                    defaultValue={data?.scrapper_data["title"]}
+                    defaultValue={
+                      data?.ai_data?.["title"] || data?.scrapper_data["title"]
+                    }
                     className="w-full h-full outline-0"
                   />
                 </h1>
 
                 <div className="border rounded h-[500px] max-h-[500px] overflow-auto">
                   {data?.ai_data ? (
-                    <textarea
-                      name="description"
-                      defaultValue={data?.ai_data["description"]}
+                    <div
                       className="!text-primary w-full h-full p-4"
-                      // dangerouslySetInnerHTML={{
-                      //   __html: data?.ai_data["description"],
-                      // }}
-                    ></textarea>
+                      dangerouslySetInnerHTML={{
+                        __html: data?.ai_data["description"],
+                      }}
+                    ></div>
                   ) : (
-                    <textarea
-                      name="description"
-                      defaultValue={data?.scrapper_data["description"]}
+                    // <textarea
+                    //   name="description"
+                    //   defaultValue={data?.ai_data["description"]}
+                    //   className="!text-primary w-full h-full p-4"
+                    //   // dangerouslySetInnerHTML={{
+                    //   //   __html: data?.ai_data["description"],
+                    //   // }}
+                    // ></textarea>
+                    <div
                       className="!text-primary w-full h-full p-4"
-                      // dangerouslySetInnerHTML={{
-                      //   __html: data?.scrapper_data["description_html"],
-                      // }}
-                    ></textarea>
+                      dangerouslySetInnerHTML={{
+                        __html: data?.scrapper_data["description_html"],
+                      }}
+                    ></div>
                   )}
                 </div>
 
@@ -285,15 +297,23 @@ export default function ProductDetail({ id, data }: { id: string; data: any }) {
 
                   <div className="flex flex-col gap-4">
                     <h1>Collections</h1>
-
-                    <SelectCollections />
+                    <SelectCollections
+                      value={selectedCollections}
+                      onChange={setSelectedCollections}
+                      name="collections"
+                      placeholder="Selecione collections..."
+                    />
                   </div>
                   <hr className="my-4" />
 
                   <div className="flex flex-col gap-4">
                     <h1>Tags</h1>
-
-                    <SelectCollections />
+                    <SelectCollections
+                      value={selectedTags}
+                      onChange={setSelectedTags}
+                      name="tags"
+                      placeholder="Selecione tags..."
+                    />
                   </div>
                 </div>
               </div>

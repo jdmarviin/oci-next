@@ -111,7 +111,7 @@ export default function ImportPage() {
             <div dangerouslySetInnerHTML={{ __html: item.scrapper_data.description_html }}></div>
           </div>
         ))} */}
-        <form action={action} className="flex gap-4 mb-4">
+        <form action={action} className="flex gap-4 mb-4 max-w-[70%]">
           <Input
             type="text"
             id="url"
